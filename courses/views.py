@@ -3,11 +3,21 @@ from django.contrib.auth.models import User
 from .forms import StudentRegisterForm
 from .models import StudentProfile
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from .models import Course
+from django.shortcuts import render
 
 @login_required
 def dashboard_view(request):
     return render(request, 'courses/dashboard.html')
+
+@login_required
+def enroll_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    profile = request.user.studentprofile
+    profile.enrolled_courses.add(course)
+    return redirect('dashboard')
 
 def register(request):
     if request.method == 'POST':
@@ -43,4 +53,9 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def course_list_view(request):
+    courses = Course.objects.all()
+    return render(request, 'courses/course_list.html', {'courses': courses})
+
  
