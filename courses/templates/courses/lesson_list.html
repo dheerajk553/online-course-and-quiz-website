@@ -1,0 +1,12 @@
+<h2>Lessons for {{ course.title }}</h2>
+<ul>
+  {% for lesson in lessons %}
+    <li>
+      <h4>{{ lesson.title }}</h4>
+      <p>{{ lesson.content }}</p>
+      {% if lesson.video_url %}
+        <a href="{{ lesson.video_url }}" target="_blank">Watch Video</a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
