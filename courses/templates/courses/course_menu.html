@@ -1,0 +1,17 @@
+<h2>Select a Course</h2>
+<div style="overflow-x: auto; white-space: nowrap; background-color: #222; padding: 10px;">
+  {% for course in courses %}
+    <a href="{% url 'course_detail' course.id %}" style="
+        display: inline-block;
+        color: white;
+        background-color: #444;
+        padding: 10px 20px;
+        margin-right: 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    ">
+      {{ course.title }}
+    </a>
+  {% endfor %}
+</div>

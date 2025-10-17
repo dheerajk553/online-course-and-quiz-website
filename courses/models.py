@@ -29,6 +29,7 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
+    #image = models.ImageField(upload_to='lesson_images/', blank=True, null=True)
     order = models.IntegerField(default=0)
 
     def __str__(self):

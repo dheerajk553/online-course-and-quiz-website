@@ -7,6 +7,11 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Course
 from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import Lesson
+#from courses.views import mark_complete
+
+#from .models import Lesson, LessonProgress
 
 @login_required
 def dashboard_view(request):
@@ -35,6 +40,7 @@ def register(request):
             return redirect('login')  # Or redirect to dashboard
     else:
         form = StudentRegisterForm()
+
     return render(request, 'courses/register.html', {'form': form})
 
 def login_view(request):
@@ -57,5 +63,70 @@ def logout_view(request):
 def course_list_view(request):
     courses = Course.objects.all()
     return render(request, 'courses/course_list.html', {'courses': courses})
+
+
+def lesson_detail(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+
+    # Get next lesson in same course
+    next_lesson = Lesson.objects.filter(
+        course=lesson.course,
+        order__gt=lesson.order
+    ).order_by('order').first()
+
+    # Get previous lesson in same course
+    prev_lesson = Lesson.objects.filter(
+        course=lesson.course,
+        order__lt=lesson.order
+    ).order_by('-order').first()
+
+    return render(request, 'courses/lesson_detail.html', {
+        'lesson': lesson,
+        'next_lesson': next_lesson,
+        'prev_lesson': prev_lesson
+    })
+
+
+def course_detail(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    lesson = Lesson.objects.filter(course=course).order_by('order').first()
+
+    next_lesson = Lesson.objects.filter(
+        course=course,
+        order__gt=lesson.order
+    ).order_by('order').first()
+
+    prev_lesson = Lesson.objects.filter(
+        course=course,
+        order__lt=lesson.order
+    ).order_by('-order').first()
+
+    return render(request, 'courses/course_detail.html', {
+        'course': course,
+        'lesson': lesson,
+        'next_lesson': next_lesson,
+        'prev_lesson': prev_lesson
+    })
+def course_menu_view(request):
+    courses = Course.objects.all()
+    return render(request, 'courses/course_menu.html', {'courses': courses})
+
+#@login_required
+#def mark_complete(request, lesson_id):
+    #lesson = get_object_or_404(Lesson, id=lesson_id)
+
+    # Check if progress already exists
+    #progress, created = LessonProgress.objects.get_or_create(
+        #user=request.user,
+        #lesson=lesson,
+        #defaults={'completed': True}
+    #)
+
+    # If already exists but not completed, update it
+    #if not created and not progress.completed:
+        #progress.completed = True
+        #progress.save()
+
+    #return redirect('lesson_detail', lesson_id=lesson.id)
 
  
