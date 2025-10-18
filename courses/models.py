@@ -7,10 +7,11 @@ from django.db import models
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100)
-    age = models.IntegerField()
+    age = models.IntegerField(null=True, blank=True)
     phone = models.CharField(max_length=15)
     home_address = models.TextField()
     status = models.CharField(max_length=10, choices=[('Student', 'Student'), ('Working', 'Working')])
+    enrolled_courses = models.ManyToManyField('Course', blank=True)
 
     def __str__(self):
         return self.full_name

@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 from .forms import StudentRegisterForm
 from .models import StudentProfile
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Course
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 from .models import Lesson
+from .models import Course, Lesson
 #from courses.views import mark_complete
 
 #from .models import Lesson, LessonProgress
@@ -17,12 +17,7 @@ from .models import Lesson
 def dashboard_view(request):
     return render(request, 'courses/dashboard.html')
 
-@login_required
-def enroll_course(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    profile = request.user.studentprofile
-    profile.enrolled_courses.add(course)
-    return redirect('dashboard')
+
 
 def register(request):
     if request.method == 'POST':
@@ -50,7 +45,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # Next step: dashboard
+            return redirect('course_menu')
         else:
             error = "Invalid username or password"
             return render(request, 'courses/login.html', {'error': error})
@@ -107,10 +102,56 @@ def course_detail(request, course_id):
         'next_lesson': next_lesson,
         'prev_lesson': prev_lesson
     })
+
 def course_menu_view(request):
     courses = Course.objects.all()
     return render(request, 'courses/course_menu.html', {'courses': courses})
 
+@login_required
+def enroll_view(request):
+    profile = request.user.studentprofile
+    enrolled = profile.enrolled_courses.all()
+    return render(request, 'courses/enroll.html', {'enrolled_courses': enrolled})
+
+@login_required
+def lesson_list_view(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    lessons = Lesson.objects.filter(course=course).order_by('order')
+    return render(request, 'courses/lesson_list.html', {
+        'course': course,
+        'lessons': lessons
+    })
+
+@login_required
+def lesson_list(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    lessons = Lesson.objects.filter(course=course).order_by('order')
+
+    # Check if user is enrolled
+    try:
+        profile = request.user.studentprofile
+    except StudentProfile.DoesNotExist:
+        profile = StudentProfile.objects.create(user=request.user)
+
+    is_enrolled = course in profile.enrolled_courses.all()
+
+    if is_enrolled:
+        visible_lessons = lessons
+    else:
+        visible_lessons = lessons[:3]  # ✅ Show only first 3 lessons
+
+    return render(request, 'courses/lesson_list.html', {
+        'course': course,
+        'lessons': visible_lessons,
+        'is_enrolled': is_enrolled,
+    })
+
+@login_required
+def enroll_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    profile, created = StudentProfile.objects.get_or_create(user=request.user)
+    profile.enrolled_courses.add(course)
+    return redirect('lesson_list', course_id=course.id)
 #@login_required
 #def mark_complete(request, lesson_id):
     #lesson = get_object_or_404(Lesson, id=lesson_id)

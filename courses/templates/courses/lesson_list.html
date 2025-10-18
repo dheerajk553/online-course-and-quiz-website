@@ -1,12 +1,27 @@
-<h2>Lessons for {{ course.title }}</h2>
-<ul>
-  {% for lesson in lessons %}
-    <li>
-      <h4>{{ lesson.title }}</h4>
-      <p>{{ lesson.content }}</p>
-      {% if lesson.video_url %}
-        <a href="{{ lesson.video_url }}" target="_blank">Watch Video</a>
-      {% endif %}
-    </li>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ course.title }} — Lessons</h2>
+  <ul>
+    {% for lesson in lessons %}
+      <li>
+        <a href="{% url 'lesson_detail' lesson.id %}">{{ lesson.title }}</a>
+      </li>
+    {% empty %}
+      <li>No lessons available.</li>
+    {% endfor %}
+  </ul>
+
+  {% if not is_enrolled %}
+    <p><strong>Only first 3 lessons are free.</strong></p>
+    <form method="POST" action="{% url 'enroll' course.id %}">
+      {% csrf_token %}
+      <button type="submit">Enroll to unlock full course</button>
+    </form>
+    <form method="POST" action="{% url 'enroll' course.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-success">Enroll to unlock full course</button>
+</form>
+
+  {% endif %}
+{% endblock %}
