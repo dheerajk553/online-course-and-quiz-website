@@ -1,0 +1,5 @@
+<h3>Enroll in {{ course.title }}?</h3>
+<p>Only enrolled users can access full lessons and quizzes.</p>
+
+<a href="{% url 'enroll_course' course.id %}" class="btn btn-success">Yes, Enroll</a>
+<a href="{% url 'course_menu' %}" class="btn btn-secondary">Cancel</a>

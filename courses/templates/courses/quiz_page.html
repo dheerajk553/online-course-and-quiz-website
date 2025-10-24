@@ -1,0 +1,14 @@
+{% load custom_filters %}
+<form method="post">
+  {% csrf_token %}
+  {% for q in questions %}
+    <p><strong>{{ q.question }}</strong></p>
+    {% for i in "12345" %}
+      <label>
+        <input type="radio" name="question_{{ q.id }}" value="{{ i }}">
+        {{ q|get_option:i }}
+      </label><br>
+    {% endfor %}
+  {% endfor %}
+  <button type="submit">Submit Quiz</button>
+</form>

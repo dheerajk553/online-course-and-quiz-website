@@ -1,0 +1,21 @@
+<h2>{{ course.title }} — Quiz</h2>
+
+{% if is_enrolled %}
+  <form method="post" action="{% url 'submit_quiz' course.id %}">
+    {% csrf_token %}
+    {% for quiz in quizzes %}
+      <div>
+        <p><strong>{{ quiz.question }}</strong></p>
+        <label><input type="radio" name="question_{{ quiz.id }}" value="1"> {{ quiz.option1 }}</label><br>
+        <label><input type="radio" name="question_{{ quiz.id }}" value="2"> {{ quiz.option2 }}</label><br>
+        <label><input type="radio" name="question_{{ quiz.id }}" value="3"> {{ quiz.option3 }}</label><br>
+        <label><input type="radio" name="question_{{ quiz.id }}" value="4"> {{ quiz.option4 }}</label><br>
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit Quiz</button>
+  </form>
+{% else %}
+  <div class="alert alert-warning">
+    You must enroll in this course to attempt the quiz.
+  </div>
+{% endif %}

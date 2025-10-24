@@ -1,14 +1,21 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .forms import StudentRegisterForm
-from .models import StudentProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Course
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404
-from .models import Lesson
-from .models import Course, Lesson
+from .forms import StudentRegisterForm
+from .models import Course, Lesson, StudentProfile
+from .models import Course, Quiz
+from .models import Quiz, QuizAttempt, Course
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect
+
+
+
+import pdfkit  # or use xhtml2pdf
+
 #from courses.views import mark_complete
 
 #from .models import Lesson, LessonProgress
@@ -113,45 +120,141 @@ def enroll_view(request):
     enrolled = profile.enrolled_courses.all()
     return render(request, 'courses/enroll.html', {'enrolled_courses': enrolled})
 
+
 @login_required
 def lesson_list_view(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    lessons = Lesson.objects.filter(course=course).order_by('order')
-    return render(request, 'courses/lesson_list.html', {
-        'course': course,
-        'lessons': lessons
-    })
+    all_lessons = Lesson.objects.filter(course=course)
 
-@login_required
-def lesson_list(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    lessons = Lesson.objects.filter(course=course).order_by('order')
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    is_enrolled = profile and course in profile.enrolled_courses.all()
 
-    # Check if user is enrolled
-    try:
-        profile = request.user.studentprofile
-    except StudentProfile.DoesNotExist:
-        profile = StudentProfile.objects.create(user=request.user)
-
-    is_enrolled = course in profile.enrolled_courses.all()
-
-    if is_enrolled:
-        visible_lessons = lessons
-    else:
-        visible_lessons = lessons[:3]  # ✅ Show only first 3 lessons
+    # Show all lessons if enrolled, else only first 3
+    lessons = all_lessons if is_enrolled else all_lessons[:3]
 
     return render(request, 'courses/lesson_list.html', {
         'course': course,
-        'lessons': visible_lessons,
+        'lessons': lessons,
         'is_enrolled': is_enrolled,
     })
+
 
 @login_required
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    profile, created = StudentProfile.objects.get_or_create(user=request.user)
-    profile.enrolled_courses.add(course)
+
+    profile, created = StudentProfile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'full_name': request.user.username,
+            'age': None,
+            'phone': '',
+            'home_address': '',
+            'status': 'Student',
+        }
+    )
+
+    if course not in profile.enrolled_courses.all():
+        profile.enrolled_courses.add(course)
+
     return redirect('lesson_list', course_id=course.id)
+
+
+
+@login_required
+def quiz_view(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    quizzes = Quiz.objects.filter(course=course)
+
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    is_enrolled = profile and course in profile.enrolled_courses.all()
+
+    return render(request, 'courses/quiz.html', {
+        'course': course,
+        'quizzes': quizzes,
+        'is_enrolled': is_enrolled,
+    })
+
+@login_required
+def course_dashboard_view(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    if not profile or course not in profile.enrolled_courses.all():
+        messages.error(request, "You must enroll in this course to access dashboard.")
+        return redirect('confirm_enroll', course_id=course.id)
+
+    lessons = Lesson.objects.filter(course=course).order_by('order')
+    quizzes = Quiz.objects.filter(course=course)
+
+    return render(request, 'courses/course_dashboard.html', {
+        'course': course,
+        'lessons': lessons,
+        'quizzes': quizzes,
+    })
+
+@login_required
+def submit_quiz(request, course_id):
+    course = Course.objects.get(id=course_id)
+    questions = Quiz.objects.filter(course=course)[:10]
+    score = 0
+
+    if request.method == 'POST':
+        for q in questions:
+            selected = int(request.POST.get(f'question_{q.id}', 0))
+            if selected == q.correct_option:
+                score += 1
+
+        passed = score >= 8
+        QuizAttempt.objects.create(user=request.user, course=course, score=score, passed=passed)
+
+        if passed:
+            html = render_to_string('courses/certificate_template.html', {
+                'user': request.user,
+                'course': course,
+                'score': score
+            })
+            config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+            pdf = pdfkit.from_string(html, False, configuration=config)
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{course.title}_certificate.pdf"'
+            return response
+
+        return render(request, 'courses/quiz_result.html', {'score': score, 'passed': passed})
+
+    return render(request, 'courses/quiz_page.html', {'course': course, 'questions': questions})
+
+
+@login_required
+def confirm_enroll_view(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    return render(request, 'courses/confirm_enroll.html', {'course': course})
+# Get or create student profile
+    profile, created = StudentProfile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'full_name': request.user.username,
+            'age': None,
+            'phone': '',
+            'home_address': '',
+            'status': 'Student',
+        }
+    )
+    # Restriction: profile must be complete
+    if not profile.age or not profile.phone:
+        messages.error(request, "Please complete your profile before enrolling.")
+        return redirect('edit_profile')  # Replace with your actual profile edit view name
+
+    # Enroll if not already enrolled
+    if course not in profile.enrolled_courses.all():
+        profile.enrolled_courses.add(course)
+        messages.success(request, f"You have successfully enrolled in {course.title}.")
+
+    return redirect('lesson_list', course_id=course.id)
+
+
+
+
 #@login_required
 #def mark_complete(request, lesson_id):
     #lesson = get_object_or_404(Lesson, id=lesson_id)

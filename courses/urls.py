@@ -1,23 +1,32 @@
 from django.urls import path
-from .views import register
-from . import views
-from .views import logout_view  
-from .views import dashboard_view
-
+from .views import (
+    register, login_view, logout_view, dashboard_view,
+    confirm_enroll_view, enroll_course, quiz_view, submit_quiz,
+    course_dashboard_view, course_list_view, course_detail,
+    enroll_view, lesson_detail, course_menu_view, lesson_list_view
+)
 
 urlpatterns = [
-    path('register/', views.register, name='register'), 
-    path('login/', views.login_view, name='login'),
-    path('dashboard/', views.dashboard_view, name='dashboard'),
-    path('logout/', views.logout_view, name='logout'),
-    path('courses/', views.course_list_view, name='course_list'),
-    path('course/<int:course_id>/', views.course_detail, name='course_detail'),
-    path('enroll/', views.enroll_view, name='enroll_view'),
-    path('enroll/<int:course_id>/', views.enroll_course, name='enroll'),
-    path('lesson/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
-    path('courses/menu/', views.course_menu_view, name='course_menu'),
-    path('menu/', views.course_menu_view, name='course_menu'),
-    path('lessons/<int:course_id>/', views.lesson_list_view, name='lesson_list'), 
-    # path('lesson/<int:lesson_id>/complete/', views.mark_complete, name='mark_complete'),
-]
+    path('register/', register, name='register'), 
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('dashboard/', dashboard_view, name='dashboard'),
 
+    path('courses/', course_list_view, name='course_list'),
+    path('course/<int:course_id>/', course_detail, name='course_detail'),
+    path('course/<int:course_id>/dashboard/', course_dashboard_view, name='course_dashboard'),
+
+    path('enroll/', enroll_view, name='enroll_view'),
+    path('enroll/<int:course_id>/', enroll_course, name='enroll'),
+    path('course/<int:course_id>/confirm-enroll/', confirm_enroll_view, name='confirm_enroll'),
+    path('course/<int:course_id>/enroll/', enroll_course, name='enroll_course'),
+
+    path('lesson/<int:lesson_id>/', lesson_detail, name='lesson_detail'),
+    path('lessons/<int:course_id>/', lesson_list_view, name='lesson_list'),
+
+    path('courses/menu/', course_menu_view, name='course_menu'),
+    path('menu/', course_menu_view, name='course_menu'),  # optional duplicate
+
+    path('course/<int:course_id>/quiz/', quiz_view, name='quiz'),
+    path('course/<int:course_id>/quiz/submit/', submit_quiz, name='submit_quiz'),
+]

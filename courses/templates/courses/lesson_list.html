@@ -2,6 +2,7 @@
 
 {% block content %}
   <h2>{{ course.title }} — Lessons</h2>
+
   <ul>
     {% for lesson in lessons %}
       <li>
@@ -13,15 +14,18 @@
   </ul>
 
   {% if not is_enrolled %}
-    <p><strong>Only first 3 lessons are free.</strong></p>
-    <form method="POST" action="{% url 'enroll' course.id %}">
-      {% csrf_token %}
-      <button type="submit">Enroll to unlock full course</button>
-    </form>
-    <form method="POST" action="{% url 'enroll' course.id %}">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-success">Enroll to unlock full course</button>
-</form>
-
+    <div class="alert alert-warning mt-4">
+      <strong>Only first 3 lessons are free.</strong>
+      <form method="POST" action="{% url 'enroll' course.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Enroll to unlock full course</button>
+      </form>
+    </div>
   {% endif %}
 {% endblock %}
+{% if is_enrolled %}
+  <a href="{% url 'quiz' course.id %}" class="btn btn-success">Take Quiz</a>
+{% else %}
+  <p class="text-muted">Enroll to unlock quizzes.</p>
+{% endif %}
+

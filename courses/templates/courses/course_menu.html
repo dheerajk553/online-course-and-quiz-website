@@ -23,3 +23,14 @@
   <span style="display: inline-block; color: white; font-size: 20px; padding: 10px;">➤</span>
 </div>
 {% endblock %}
+
+{% if course in request.user.studentprofile.enrolled_courses.all %}
+  <span class="badge bg-success">Enrolled</span>
+{% else %}
+  <a href="{% url 'confirm_enroll' course.id %}" class="btn btn-warning">Enroll</a>
+{% endif %}
+{% if is_enrolled %}
+  <a href="{% url 'quiz' course.id %}" class="btn btn-success">Take Quiz</a>
+{% else %}
+  <p class="text-muted">Enroll to unlock quizzes.</p>
+{% endif %}

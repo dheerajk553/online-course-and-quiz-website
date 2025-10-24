@@ -1,0 +1,21 @@
+<h2>{{ course.title }}</h2>
+
+<h3>Lessons:</h3>
+<ul>
+  {% for lesson in lessons %}
+    <li><a href="{% url 'lesson_detail' lesson.id %}">{{ lesson.title }}</a></li>
+  {% endfor %}
+</ul>
+
+<h3>Quiz:</h3>
+{% if quizzes %}
+  <a href="{% url 'quiz' course.id %}" class="btn btn-success">Attempt Quiz</a>
+{% else %}
+  <p>No quiz available for this course yet.</p>
+{% endif %}
+<h3>Quiz:</h3>
+{% if quizzes %}
+  <a href="{% url 'quiz' course.id %}" class="btn btn-success">View Quiz</a>
+{% else %}
+  <p>No quiz available for this course yet.</p>
+{% endif %}
