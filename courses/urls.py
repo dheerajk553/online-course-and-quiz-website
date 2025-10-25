@@ -1,4 +1,5 @@
 from django.urls import path
+from .views import download_certificate
 from .views import (
     register, login_view, logout_view, dashboard_view,
     confirm_enroll_view, enroll_course, quiz_view, submit_quiz,
@@ -29,4 +30,6 @@ urlpatterns = [
 
     path('course/<int:course_id>/quiz/', quiz_view, name='quiz'),
     path('course/<int:course_id>/quiz/submit/', submit_quiz, name='submit_quiz'),
+    path('certificate/download/', download_certificate, name='download_certificate'),
+
 ]

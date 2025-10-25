@@ -1,6 +1,12 @@
 <h2>Your Score: {{ score }}/10</h2>
+
 {% if passed %}
-  <p>✅ You passed! Your certificate is downloading...</p>
+  <div class="alert alert-success mt-3">
+    Congratulations! You passed the quiz.
+  </div>
+  <a href="{% url 'download_certificate' %}" class="btn btn-success mt-2">Download Certificate</a>
 {% else %}
-  <p>❌ You did not pass. Try again!</p>
+  <div class="alert alert-danger mt-3">
+    Sorry, you did not pass. Try again!
+  </div>
 {% endif %}

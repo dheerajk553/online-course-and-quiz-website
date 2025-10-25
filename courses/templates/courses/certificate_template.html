@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 50px; }
-    .certificate { border: 5px solid #333; padding: 40px; }
-  </style>
-</head>
-<body>
-  <div class="certificate">
-    <h1>Certificate of Completion</h1>
-    <p>This certifies that</p>
-    <h2>{{ user.get_full_name }}</h2>
-    <p>has successfully completed the course</p>
-    <h3>{{ course.title }}</h3>
-    <p>with a score of {{ score }}/10</p>
-    <p>Date: {{ attempted_at|date:"F j, Y" }}</p>
-  </div>
-</body>
-</html>
+<div style="text-align: center; padding: 50px; border: 2px solid #333;">
+  <h1 style="font-size: 32px;">Certificate of Completion</h1>
+  <p>This certifies that</p>
+  <h2 style="font-size: 28px;">{{ full_name }}</h2>
+  <p>has successfully completed the course</p>
+  <h3 style="font-size: 24px;">{{ course.title }}</h3>
+  <p>with a score of {{ score }}/10</p>
+  <p>Date of Issue: {{ issue_date }}</p>
+</div>

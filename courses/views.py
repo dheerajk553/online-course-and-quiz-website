@@ -11,9 +11,9 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-
-
-
+from datetime import datetime
+from .models import Course, StudentProfile
+from django.http import HttpResponse
 import pdfkit  # or use xhtml2pdf
 
 #from courses.views import mark_complete
@@ -206,24 +206,53 @@ def submit_quiz(request, course_id):
                 score += 1
 
         passed = score >= 8
+
+        full_name = request.user.get_full_name()
+        if not full_name:
+            full_name = request.user.username
+
+        issue_date = datetime.now().strftime("%d %B %Y")
+
         QuizAttempt.objects.create(user=request.user, course=course, score=score, passed=passed)
 
         if passed:
-            html = render_to_string('courses/certificate_template.html', {
-                'user': request.user,
-                'course': course,
-                'score': score
-            })
-            config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
-            pdf = pdfkit.from_string(html, False, configuration=config)
-            response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = f'attachment; filename="{course.title}_certificate.pdf"'
-            return response
+            request.session['certificate_context'] = {
+                'full_name': full_name,
+                'issue_date': issue_date,
+                'score': score,
+                'course_id': course.id,
+            }
 
-        return render(request, 'courses/quiz_result.html', {'score': score, 'passed': passed})
+        return render(request, 'courses/quiz_result.html', {
+            'score': score,
+            'passed': passed,
+            'course': course,
+        })
 
     return render(request, 'courses/quiz_page.html', {'course': course, 'questions': questions})
 
+
+@login_required
+def download_certificate(request):
+    context = request.session.get('certificate_context')
+    if not context:
+        messages.error(request, "No certificate available.")
+        return redirect('dashboard')
+
+    course = get_object_or_404(Course, id=context['course_id'])
+
+    html = render_to_string('courses/certificate_template.html', {
+        'full_name': context['full_name'],
+        'issue_date': context['issue_date'],
+        'score': context['score'],
+        'course': course,
+    })
+
+    config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+    pdf = pdfkit.from_string(html, False, configuration=config)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{course.title}_certificate.pdf"'
+    return response
 
 @login_required
 def confirm_enroll_view(request, course_id):
