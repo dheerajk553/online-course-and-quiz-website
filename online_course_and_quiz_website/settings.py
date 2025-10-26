@@ -24,10 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ur8$2%47=-h^t=to3@kpwc))#^#tp0y1*v2mt^_t6ty1#87lbu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'dheerajk553.pythonanywhere.com']
 
 # Application definition
 
@@ -42,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'courses',
     'users',
-    #'quiz',
+    # 'quiz',
 ]
 
 
@@ -123,10 +122,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'courses' / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATIC_ROOT = BASE_DIR / 'static'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
