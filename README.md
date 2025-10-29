@@ -1,31 +1,31 @@
-# online-course-and-quiz-website
+# Online Course and Quiz Website 🎓
 
-A Django-based web application that enables students to enroll in courses, study lessons, take quizzes, and earn certificates — all under one roof.
-
----
-
-## Features
-
--  Student enrollment and course browsing  
--  Lesson viewing and quiz participation  
--  Certificate generation in PDF format  
--  Admin panel for managing courses, lessons, quizzes, and users  
--  Mobile-friendly and responsive design
+This is a Django-based web application where students can enroll in courses, study lessons, take quizzes, and earn PDF certificates — all in one place. The goal was to build a complete learning platform using only the essential tools, keeping everything simple, responsive, and easy to use.
 
 ---
 
-## Technology Use
+## 🚀 Features
+
+- Student registration and course browsing  
+- Lesson viewing with interactive quizzes  
+- Auto-generated PDF certificates after quiz completion  
+- Admin panel to manage courses, lessons, quizzes, and users  
+- Fully responsive design — works on mobile and desktop
+
+---
+
+## 🛠️ Tech Stack
 
 | Layer       | Tools & Frameworks                          |
-|------------|---------------------------------------------|
-| Backend     | Python, Django Framework                    |
+|-------------|---------------------------------------------|
+| Backend     | Python, Django                              |
 | Frontend    | HTML5, CSS3, JavaScript, Bootstrap          |
 | Database    | SQLite (default) or MySQL                   |
-| Other Tools | Django Admin Panel, GitHub, VS Code, PDF Generator |
+| Tools       | Django Admin, GitHub, VS Code, xhtml2pdf, pdfkit |
 
 ---
 
-##  Setup Instructions
+## ⚙️ Setup Instructions
 
 ```bash
 git clone https://github.com/dheerajk053/online-course-and-quiz-website.git
@@ -36,15 +36,41 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 
+Requirements
+The project uses only the necessary Python packages:
+# Django framework for building the web app
+Django>=5.2.7
 
-## Project Goals
+# For generating PDF certificates
+pdfkit==1.0.0
+xhtml2pdf>=0.2.5
 
-- Build a fully functional online learning platform using Django and SQLite  
-- Provide students with interactive lessons, quizzes, and certificates  
-- Implement secure access control for students and admins  
-- Ensure the site is attractive, responsive, and easy to use
+# For handling images (used in certificate generation)
+pillow>=11.3.0
+
+# To limit API requests (used in quiz or certificate endpoints)
+ratelimit>=2.2.1
+
+# For making HTTP requests (used in external API calls)
+requests>=2.32.5
+
+# Required by Django for database parsing
+sqlparse>=0.5.3
 
 
-##  Learning Reflection
 
-This project helped me apply full-stack development skills in a real-world context. I focused on originality, academic integrity, and practical implementation. From backend logic to frontend design, every step was manually built and documented. It reflects my commitment to hands-on learning and building something that can be applied in real life.
+Project Goals
+Build a complete online learning platform using Django
+
+Allow students to learn, take quizzes, and earn certificates
+
+Implement secure login for students and admins
+
+Keep the UI clean, responsive, and easy to navigate
+
+Learning Reflection
+This project helped me apply full-stack development skills in a real-world scenario. I built everything manually — from backend logic to frontend design — with a focus on originality and academic integrity. It reflects my commitment to hands-on learning and building something practical and deployable.
+
+Deployment Ready
+
+This project is configured for deployment on PythonAnywhere. All static and media paths are validated, and the requirements.txt is clean and optimized for production.
