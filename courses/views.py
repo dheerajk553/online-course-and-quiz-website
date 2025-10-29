@@ -15,10 +15,13 @@ from datetime import datetime
 from .models import Course, StudentProfile
 from django.http import HttpResponse
 import pdfkit  # or use xhtml2pdf
+from django.shortcuts import render
 
 #from courses.views import mark_complete
 
 #from .models import Lesson, LessonProgress
+def register_view(request):
+    return render(request, 'register.html')
 
 @login_required
 def dashboard_view(request):

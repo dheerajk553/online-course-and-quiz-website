@@ -1,4 +1,6 @@
 from django.urls import path
+from django.shortcuts import redirect
+from . import views
 from .views import download_certificate
 from .views import (
     register, login_view, logout_view, dashboard_view,
@@ -8,6 +10,8 @@ from .views import (
 )
 
 urlpatterns = [
+    path('', lambda request: redirect('/register/')), #  homepage redirect
+    path('register/', views.register_view, name='register'), #  actual register view
     path('register/', register, name='register'), 
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
