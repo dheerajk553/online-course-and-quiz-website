@@ -1,18 +1,18 @@
-# Django framework
+# Django framework for building the web app
 Django>=5.2.7
 
-# PDF generation
+# For generating PDF certificates
 pdfkit==1.0.0
 xhtml2pdf>=0.2.5
 
-# Image handling
+# For handling images (used in certificate generation)
 pillow>=11.3.0
 
-# API rate limiting
+# To limit API requests (used in quiz or certificate endpoints)
 ratelimit>=2.2.1
 
-# HTTP requests
+# For making HTTP requests (used in external API calls)
 requests>=2.32.5
 
-# SQL parsing (used by Django)
+# Required by Django for database parsing
 sqlparse>=0.5.3
