@@ -1,4 +1,4 @@
-# Online Course and Quiz Website 🎓
+# Online Course and Quiz Website 
 
 This is a Django-based web application where students can enroll in courses, study lessons, take quizzes, and earn PDF certificates — all in one place. The goal was to build a complete learning platform using only the essential tools, keeping everything simple, responsive, and easy to use.
 
