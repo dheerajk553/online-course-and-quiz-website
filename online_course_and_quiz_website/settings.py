@@ -26,9 +26,17 @@ SECRET_KEY = 'django-insecure-ur8$2%47=-h^t=to3@kpwc))#^#tp0y1*v2mt^_t6ty1#87lbu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'Dheerajkumar.pythonanywhere.com']
-CSRF_TRUSTED_ORIGINS = ['https://Dheerajkumar.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'Dheerajkumar.pythonanywhere.com'
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1',
+    'http://localhost',
+    'https://Dheerajkumar.pythonanywhere.com'
+]
 
 # Application definition
 
@@ -134,5 +142,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
