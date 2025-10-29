@@ -4,7 +4,7 @@ This is a Django-based web application where students can enroll in courses, stu
 
 ---
 
-## 🚀 Features
+##  Features
 
 - Student registration and course browsing  
 - Lesson viewing with interactive quizzes  
@@ -14,7 +14,7 @@ This is a Django-based web application where students can enroll in courses, stu
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer       | Tools & Frameworks                          |
 |-------------|---------------------------------------------|
@@ -25,7 +25,7 @@ This is a Django-based web application where students can enroll in courses, stu
 
 ---
 
-## ⚙️ Setup Instructions
+##  Setup Instructions
 
 ```bash
 git clone https://github.com/dheerajk053/online-course-and-quiz-website.git
