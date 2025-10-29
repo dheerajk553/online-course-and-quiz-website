@@ -1,0 +1,18 @@
+# Django framework
+Django>=5.2.7
+
+# PDF generation
+pdfkit==1.0.0
+xhtml2pdf>=0.2.5
+
+# Image handling
+pillow>=11.3.0
+
+# API rate limiting
+ratelimit>=2.2.1
+
+# HTTP requests
+requests>=2.32.5
+
+# SQL parsing (used by Django)
+sqlparse>=0.5.3
