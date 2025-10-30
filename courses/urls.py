@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from . import views
 from .views import download_certificate
 from django.views.generic.base import RedirectView
+
 from .views import (
     register, login_view, logout_view, dashboard_view,
     confirm_enroll_view, enroll_course, quiz_view, submit_quiz,
@@ -12,8 +13,8 @@ from .views import (
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/register/', permanent=False)),
-    path('', views.register, name='home'),
     path('register/', views.register, name='register'),
+    path('', views.register, name='home'),
     #path('', lambda request: redirect('/register/')), #  homepage redirect
     #path('register/', views.register_view, name='register'), #  actual register view
     path('register/', register, name='register'),
