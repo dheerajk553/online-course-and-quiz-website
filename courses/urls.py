@@ -10,8 +10,9 @@ from .views import (
 )
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/register/', permanent=False)),  # homepage redirects to /register/
-    path('register/', register, name='register'),
+    #path('', RedirectView.as_view(url='/register/', permanent=False)),  # homepage redirects to /register/
+    path('register/', views.register, name='register'),
+    path('login/', views.login, name='login'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('dashboard/', dashboard_view, name='dashboard'),
