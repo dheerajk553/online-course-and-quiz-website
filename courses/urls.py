@@ -1,25 +1,17 @@
 from django.urls import path
-from django.shortcuts import redirect
 from . import views
-from .views import download_certificate
-from django.views.generic.base import RedirectView
-
+from django.views.generic import RedirectView
 from .views import (
     register, login_view, logout_view, dashboard_view,
     confirm_enroll_view, enroll_course, quiz_view, submit_quiz,
     course_dashboard_view, course_list_view, course_detail,
-    enroll_view, lesson_detail, course_menu_view, lesson_list_view
+    enroll_view, lesson_detail, course_menu_view, lesson_list_view,
+    download_certificate
 )
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/register/', permanent=False)),
-    path('register/', views.register, name='register'),
-    path('', views.register, name='home'),
-    #path('', lambda request: redirect('/register/')), #  homepage redirect
-    #path('register/', views.register_view, name='register'), #  actual register view
+    path('', RedirectView.as_view(url='/register/', permanent=False)),  # ✅ homepage redirects to /register/
     path('register/', register, name='register'),
-    path('register/', views.register, name='register'),
-    path('login/', views.login, name='login'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('dashboard/', dashboard_view, name='dashboard'),
@@ -37,10 +29,9 @@ urlpatterns = [
     path('lessons/<int:course_id>/', lesson_list_view, name='lesson_list'),
 
     path('courses/menu/', course_menu_view, name='course_menu'),
-    path('menu/', course_menu_view, name='course_menu'),  # optional duplicate
+    path('menu/', course_menu_view, name='course_menu'),
 
     path('course/<int:course_id>/quiz/', quiz_view, name='quiz'),
     path('course/<int:course_id>/quiz/submit/', submit_quiz, name='submit_quiz'),
     path('certificate/download/', download_certificate, name='download_certificate'),
-
 ]
