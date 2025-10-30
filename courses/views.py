@@ -20,7 +20,7 @@ from django.shortcuts import render
 #from courses.views import mark_complete
 
 #from .models import Lesson, LessonProgress
-def register_view(request):
+def register(request):
     return render(request, 'register.html')
 
 @login_required

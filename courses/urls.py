@@ -11,8 +11,9 @@ from .views import (
 
 urlpatterns = [
     path('', views.register, name='home'),
+    path('register/', views.register, name='register'),
     #path('', lambda request: redirect('/register/')), #  homepage redirect
-    path('register/', views.register_view, name='register'), #  actual register view
+    #path('register/', views.register_view, name='register'), #  actual register view
     path('register/', register, name='register'), 
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
