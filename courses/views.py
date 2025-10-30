@@ -20,14 +20,9 @@ from django.shortcuts import render
 #from courses.views import mark_complete
 
 #from .models import Lesson, LessonProgress
-def register(request):
-    return render(request, 'register.html')
-
 @login_required
 def dashboard_view(request):
     return render(request, 'courses/dashboard.html')
-
-
 
 def register(request):
     if request.method == 'POST':
@@ -42,7 +37,7 @@ def register(request):
             profile.user = user
             profile.save()
 
-            return redirect('login')  # Or redirect to dashboard
+            return redirect('login')  #Or redirect to dashboard
     else:
         form = StudentRegisterForm()
 
