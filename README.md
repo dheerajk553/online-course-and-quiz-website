@@ -1,4 +1,4 @@
-# Online Course and Quiz Website ✨
+# Online Course and Quiz Website
 
 > A clean Django app where students enroll in courses, study lessons, take quizzes, and instantly download a PDF certificate when they pass.
 
